@@ -309,90 +309,83 @@ elif page == "Model Prediction":
         </p>
     </div>
     """, unsafe_allow_html=True)
-    
-    col1, col2, col3 = st.columns(3)
-    
+
+    # Stylish text fields layout
+    col1, col2 = st.columns(2)
+
     with col1:
-        pregnancies = st.number_input("Pregnancies", min_value=0, max_value=17, value=1, step=1, format="%d")
-        glucose = st.number_input("Glucose Level", min_value=0, max_value=200, value=100, step=1, format="%d")
-        blood_pressure = st.number_input("Blood Pressure", min_value=0, max_value=122, value=70, step=1, format="%d")
-        skin_thickness = st.number_input("Skin Thickness", min_value=0, max_value=99, value=20, step=1, format="%d")
-    
+        pregnancies = st.text_input("👶 Pregnancies", "1")
+        glucose = st.text_input("🩸 Glucose Level (mg/dL)", "100")
+        blood_pressure = st.text_input("💓 Blood Pressure (mmHg)", "70")
+        skin_thickness = st.text_input("📏 Skin Thickness (mm)", "20")
+
     with col2:
-        insulin = st.number_input("Insulin", min_value=0, max_value=846, value=80, step=1, format="%d")
-        bmi = st.number_input("BMI", min_value=0.0, max_value=67.1, value=25.0, step=0.1, format="%.1f")
-        diabetes_pedigree = st.number_input("Diabetes Pedigree Function", min_value=0.078, max_value=2.42, value=0.5, step=0.01, format="%.3f")
-        age = st.number_input("Age", min_value=21, max_value=81, value=30, step=1, format="%d")
-    
-    with col3:
-        st.markdown("""
-        <div style='background-color: #f8f9fa; padding: 1.5rem; border-radius: 10px; height: 100%;'>
-            <h4 style='color: #2E86AB; margin-top: 0;'>Normal Ranges</h4>
-            <ul style='padding-left: 1.2rem;'>
-                <li>Glucose: 70-100 mg/dL (fasting)</li>
-                <li>Blood Pressure: < 120/80 mmHg</li>
-                <li>BMI: 18.5-24.9</li>
-                <li>Skin Thickness: 10-40 mm</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    # Create feature array
-    input_data = np.array([[pregnancies, glucose, blood_pressure, skin_thickness, 
-                           insulin, bmi, diabetes_pedigree, age]])
-    
-    # Scale the features
-    input_scaled = scaler.transform(input_data)
-    
-    # Make prediction
-    prediction = model.predict(input_scaled)
-    probability = model.predict_proba(input_scaled)
-    
-    # Display results
-    st.markdown("<h2 class='sub-header'>Prediction Results</h2>", unsafe_allow_html=True)
-    
-    result_col1, result_col2 = st.columns(2)
-    
-    with result_col1:
-        if prediction[0] == 1:
-            st.markdown("""
-            <div style='background-color: #ffcccc; padding: 2rem; border-radius: 10px; text-align: center;'>
-                <h2 style='color: #d63031; margin: 0;'>Diabetes Detected</h2>
-                <p style='font-size: 1.2rem; margin: 0.5rem 0 0 0;'>Please consult a healthcare professional</p>
-            </div>
-            """, unsafe_allow_html=True)
-        else:
-            st.markdown("""
-            <div style='background-color: #d4edda; padding: 2rem; border-radius: 10px; text-align: center;'>
-                <h2 style='color: #28a745; margin: 0;'>No Diabetes Detected</h2>
-                <p style='font-size: 1.2rem; margin: 0.5rem 0 0 0;'>Maintain a healthy lifestyle</p>
-            </div>
-            """, unsafe_allow_html=True)
-    
-    with result_col2:
-        st.markdown("""
-        <div style='background-color: #f8f9fa; padding: 2rem; border-radius: 10px;'>
-            <h3 style='color: #2E86AB; margin-top: 0;'>Probability Analysis</h3>
-            <p style='font-size: 1.2rem;'><strong>Probability of Diabetes:</strong> {:.2f}%</p>
-            <p style='font-size: 1.2rem;'><strong>Confidence:</strong> {:.2f}%</p>
-        </div>
-        """.format(probability[0][1]*100, max(probability[0])*100), unsafe_allow_html=True)
-    
-    # 🚫 Removed progress bar here
-    
-    # Feature importance (for tree-based models)
-    if hasattr(model, 'feature_importances_'):
-        st.markdown("<h2 class='sub-header'>Feature Importance</h2>", unsafe_allow_html=True)
-        feature_importance = pd.DataFrame({
-            'Feature': df.columns[:-1],
-            'Importance': model.feature_importances_
-        }).sort_values('Importance', ascending=False)
+        insulin = st.text_input("💉 Insulin (mu U/ml)", "80")
+        bmi = st.text_input("⚖️ BMI", "25.0")
+        diabetes_pedigree = st.text_input("🧬 Diabetes Pedigree Function", "0.5")
+        age = st.text_input("🎂 Age", "30")
+
+    # Convert input to float/int safely
+    try:
+        input_data = np.array([[
+            int(pregnancies), float(glucose), float(blood_pressure), float(skin_thickness),
+            float(insulin), float(bmi), float(diabetes_pedigree), int(age)
+        ]])
         
-        fig, ax = plt.subplots(figsize=(10, 6))
-        sns.barplot(x='Importance', y='Feature', data=feature_importance, ax=ax, color="#2E86AB")
-        ax.set_title('Feature Importance')
-        ax.set_facecolor('#f8f9fa')
-        st.pyplot(fig)
+        # Scale features
+        input_scaled = scaler.transform(input_data)
+
+        # Make prediction
+        prediction = model.predict(input_scaled)
+        probability = model.predict_proba(input_scaled)
+
+        # Results
+        st.markdown("<h2 class='sub-header'>Prediction Results</h2>", unsafe_allow_html=True)
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            if prediction[0] == 1:
+                st.markdown("""
+                <div style='background-color: #ffcccc; padding: 2rem; border-radius: 10px; text-align: center;'>
+                    <h2 style='color: #d63031; margin: 0;'>Diabetes Detected</h2>
+                    <p style='font-size: 1.2rem; margin: 0.5rem 0 0 0;'>Please consult a healthcare professional</p>
+                </div>
+                """, unsafe_allow_html=True)
+            else:
+                st.markdown("""
+                <div style='background-color: #d4edda; padding: 2rem; border-radius: 10px; text-align: center;'>
+                    <h2 style='color: #28a745; margin: 0;'>No Diabetes Detected</h2>
+                    <p style='font-size: 1.2rem; margin: 0.5rem 0 0 0;'>Maintain a healthy lifestyle</p>
+                </div>
+                """, unsafe_allow_html=True)
+
+        with col2:
+            st.markdown("""
+            <div style='background-color: #f8f9fa; padding: 2rem; border-radius: 10px;'>
+                <h3 style='color: #2E86AB; margin-top: 0;'>Probability Analysis</h3>
+                <p style='font-size: 1.2rem;'><strong>Probability of Diabetes:</strong> {:.2f}%</p>
+                <p style='font-size: 1.2rem;'><strong>Confidence:</strong> {:.2f}%</p>
+            </div>
+            """.format(probability[0][1]*100, max(probability[0])*100), unsafe_allow_html=True)
+
+        # Feature importance (for tree-based models)
+        if hasattr(model, 'feature_importances_'):
+            st.markdown("<h2 class='sub-header'>Feature Importance</h2>", unsafe_allow_html=True)
+            feature_importance = pd.DataFrame({
+                'Feature': df.columns[:-1],
+                'Importance': model.feature_importances_
+            }).sort_values('Importance', ascending=False)
+
+            fig, ax = plt.subplots(figsize=(10, 6))
+            sns.barplot(x='Importance', y='Feature', data=feature_importance, ax=ax, color="#2E86AB")
+            ax.set_title('Feature Importance')
+            ax.set_facecolor('#f8f9fa')
+            st.pyplot(fig)
+
+    except Exception as e:
+        st.error("⚠️ Please enter valid numeric values for all fields.")
+
 
 # Model Performance page
 elif page == "Model Performance":
