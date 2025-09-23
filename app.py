@@ -387,10 +387,10 @@ elif page == "Model Prediction":
             """, unsafe_allow_html=True)
     
     with result_col2:
-        st.markdown("""
-        <div style='background-color: #f8f9fa; padding: 2rem; border-radius: 10px;'>
-            <h3 style='color: #2E86AB; margin-top: 0;'>Probability Analysis</h3>
-            <p style='font-size: 1.2rem;'><strong>Probability of Diabetes:</strong> {:.2f}%</p>
-            <p style='font-size: 1.2rem;'><strong>Confidence:</strong> {:.2f}%</p>
-        </div>
-        """.format(probability[0][1]*100, max(probability[
+    st.markdown("""
+    <div style='background-color: #f8f9fa; padding: 2rem; border-radius: 10px;'>
+        <h3 style='color: #2E86AB; margin-top: 0;'>Probability Analysis</h3>
+        <p style='font-size: 1.2rem;'><strong>Probability of Diabetes:</strong> {:.2f}%</p>
+        <p style='font-size: 1.2rem;'><strong>Confidence:</strong> {:.2f}%</p>
+    </div>
+    """.format(probability[0][1]*100, max(probability[0])*100), unsafe_allow_html=True)
