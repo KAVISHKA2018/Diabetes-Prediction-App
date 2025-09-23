@@ -313,16 +313,16 @@ elif page == "Model Prediction":
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        pregnancies = st.slider("Pregnancies", 0, 17, 1)
-        glucose = st.slider("Glucose Level", 0, 200, 100)
-        blood_pressure = st.slider("Blood Pressure", 0, 122, 70)
-        skin_thickness = st.slider("Skin Thickness", 0, 99, 20)
+        pregnancies = st.number_input("Pregnancies", min_value=0, max_value=17, value=1, step=1, format="%d")
+        glucose = st.number_input("Glucose Level", min_value=0, max_value=200, value=100, step=1, format="%d")
+        blood_pressure = st.number_input("Blood Pressure", min_value=0, max_value=122, value=70, step=1, format="%d")
+        skin_thickness = st.number_input("Skin Thickness", min_value=0, max_value=99, value=20, step=1, format="%d")
     
     with col2:
-        insulin = st.slider("Insulin", 0, 846, 80)
-        bmi = st.slider("BMI", 0.0, 67.1, 25.0)
-        diabetes_pedigree = st.slider("Diabetes Pedigree Function", 0.078, 2.42, 0.5)
-        age = st.slider("Age", 21, 81, 30)
+        insulin = st.number_input("Insulin", min_value=0, max_value=846, value=80, step=1, format="%d")
+        bmi = st.number_input("BMI", min_value=0.0, max_value=67.1, value=25.0, step=0.1, format="%.1f")
+        diabetes_pedigree = st.number_input("Diabetes Pedigree Function", min_value=0.078, max_value=2.42, value=0.5, step=0.01, format="%.3f")
+        age = st.number_input("Age", min_value=21, max_value=81, value=30, step=1, format="%d")
     
     with col3:
         st.markdown("""
@@ -378,10 +378,7 @@ elif page == "Model Prediction":
         </div>
         """.format(probability[0][1]*100, max(probability[0])*100), unsafe_allow_html=True)
     
-    # Progress bar for probability
-    st.markdown("<br>", unsafe_allow_html=True)
-    st.write("**Diabetes Risk Level:**")
-    st.progress(probability[0][1])
+    # 🚫 Removed progress bar here
     
     # Feature importance (for tree-based models)
     if hasattr(model, 'feature_importances_'):
